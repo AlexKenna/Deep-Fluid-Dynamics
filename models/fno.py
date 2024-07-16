@@ -134,4 +134,4 @@ class FNO2d(nn.Module):
         x = F.gelu(x)
         x = self.fc2(x)
 
-        return x.unsqueeze(-2)
+        return x
