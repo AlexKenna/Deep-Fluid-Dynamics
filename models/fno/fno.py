@@ -79,7 +79,7 @@ class SpectralConv2d_fast(nn.Module):
 
 
 class FNO2d(nn.Module):
-    def __init__(self, num_channels, modes1=12, modes2=12, width=20, initial_step=10):
+    def __init__(self, in_channels=2, out_channels=2, modes1=12, modes2=12, width=20, initial_step=10):
         super(FNO2d, self).__init__()
 
         """
@@ -99,7 +99,7 @@ class FNO2d(nn.Module):
         self.modes2 = modes2
         self.width = width
         self.padding = 2  # pad the domain if input is non-periodic
-        self.fc0 = nn.Linear(initial_step*num_channels+2, self.width)
+        self.fc0 = nn.Linear(initial_step*in_channels+2, self.width)
         # input channel is 12: the solution of the previous 10 timesteps + 2 locations (u(t-10, x, y), ..., u(t-1, x, y),  x, y)
 
         self.conv0 = SpectralConv2d_fast(
@@ -116,7 +116,7 @@ class FNO2d(nn.Module):
         self.w3 = nn.Conv2d(self.width, self.width, 1)
 
         self.fc1 = nn.Linear(self.width, 128)
-        self.fc2 = nn.Linear(128, num_channels)
+        self.fc2 = nn.Linear(128, out_channels)
 
     def forward(self, x, grid):
         # x dim = [b, x1, x2, t*v]
