@@ -13,7 +13,7 @@ from utils.dataloader import DatasetType, FluidDataset
 
 def run_training(
     data_file,
-    unroll_steps,
+    lookback_steps,
     epochs,
     learning_rate,
     device,
@@ -23,6 +23,7 @@ def run_training(
     model_update,
     continue_training=False,
     base_data_path="data/dataset/",
+    base_model_path="models/fno/pretrained/"
 ):
 
     print(f"Device: {device}, epochs: {epochs}, learning rate: {learning_rate}, scheduler step: {scheduler_step}, scheduler gamma: {scheduler_gamma}")
@@ -45,7 +46,7 @@ def run_training(
 
     model = FNO2d(in_channels=2, out_channels=2).to(device)
     model_name = "FNO_" + data_file
-    model_path = "models/fno/pretrained/" + model_name + ".pt"
+    model_path = base_model_path + model_name + ".pt"
 
     optimiser = optim.Adam(model.parameters(), lr=learning_rate)
     scheduler = torch.optim.lr_scheduler.StepLR(
@@ -99,7 +100,7 @@ def run_training(
             # grid: [b, x1, x2, dims]
 
             total_steps = data.shape[-2]
-            num_predictions = total_steps - unroll_steps
+            num_predictions = total_steps - lookback_steps
 
             data = data.to(device)
             grid = grid.to(device)
@@ -107,7 +108,7 @@ def run_training(
             for start_step in range(num_predictions):
 
                 train_iters += 1
-                current_step = start_step + unroll_steps
+                current_step = start_step + lookback_steps
 
                 x = data[..., start_step:current_step, :].flatten(-2)
                 y = data[..., current_step : current_step + 1, :]
@@ -132,7 +133,7 @@ def run_training(
                 for data, grid in val_loader:
 
                     total_steps = data.shape[-2]
-                    num_predictions = total_steps - unroll_steps
+                    num_predictions = total_steps - lookback_steps
 
                     data = data.to(device)
                     grid = grid.to(device)
@@ -140,7 +141,7 @@ def run_training(
                     for start_step in range(num_predictions):
 
                         val_iters += 1
-                        current_step = start_step + unroll_steps
+                        current_step = start_step + lookback_steps
 
                         x = data[..., start_step:current_step, :].flatten(-2)
                         y = data[..., current_step : current_step + 1, :]
