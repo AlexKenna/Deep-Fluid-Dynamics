@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 import torch
 from torch import nn, optim
@@ -170,3 +171,28 @@ def run_training(
                 },
                 model_path,
             )
+
+
+    # --------------------------------------------------------------#
+    # Plots
+    # --------------------------------------------------------------#    
+
+    fig, ax = plt.subplots(nrows=1, ncols=2)
+
+    x_plot = list(range(len(train_losses)))
+    ax[0].set_xlabel("Epochs")
+    ax[0].set_ylabel("MSE Loss")
+    ax[0].plot(x_plot, train_losses, color="#636EFA")
+    ax[0].plot(x_plot, val_losses, color="#EF553B")
+    ax[0].legend(["Training Loss", "Validation Loss"])
+    ax[0].grid()
+
+    ax[1].set_xlabel("Epochs")
+    ax[1].set_ylabel("MSE Loss")
+    ax[1].plot(x_plot[2:], train_losses[2:], color="#636EFA")
+    ax[1].plot(x_plot[2:], val_losses[2:], color="#EF553B")
+    ax[1].legend(["Training Loss", "Validation Loss"])
+    ax[1].grid()
+
+    fig.tight_layout()
+    plt.show()
