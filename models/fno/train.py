@@ -55,6 +55,9 @@ def run_training(
     start_epoch = 0
     loss_val_min = np.infty
 
+    train_losses = []
+    val_losses = []
+
     if continue_training:
         print("Restoring model from file...")
         checkpoint = torch.load(model_path, map_location=device)
@@ -71,13 +74,13 @@ def run_training(
 
         start_epoch = checkpoint["epoch"]
         loss_val_min = checkpoint["loss"]
+        train_losses = checkpoint["training_losses"]
+        val_losses = checkpoint["validation_losses"]
+
 
     # --------------------------------------------------------------#
     # Training
     # --------------------------------------------------------------#
-
-    train_losses = []
-    val_losses = []
 
     for epoch in range(start_epoch, epochs):
 
