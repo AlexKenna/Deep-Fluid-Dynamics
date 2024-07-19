@@ -55,6 +55,7 @@ def run_training(
     loss_fn = nn.MSELoss()
 
     start_epoch = 0
+    train_time = 0
     loss_val_min = np.infty
 
     train_losses = []
@@ -75,6 +76,7 @@ def run_training(
                     state[k] = v.to(device)
 
         start_epoch = checkpoint["epoch"]
+        train_time = checkpoint["train_time"]
         loss_val_min = checkpoint["loss"]
         train_losses = checkpoint["training_losses"]
         val_losses = checkpoint["validation_losses"]
@@ -153,6 +155,7 @@ def run_training(
         # Logging
 
         stop_time = default_timer()
+        train_time += stop_time - start_time
         train_losses.append(total_train_loss / train_iters)
         val_losses.append(total_val_loss / val_iters)
         print(f"Epoch: {epoch}, time: {stop_time - start_time:.5f}, train loss: {train_losses[-1]:.6f}, val loss: {val_losses[-1]:.6f}")
@@ -164,6 +167,7 @@ def run_training(
             torch.save(
                 {
                     "epoch": epoch,
+                    "train_time": train_time,
                     "model_state_dict": model.state_dict(),
                     "optimiser_state_dict": optimiser.state_dict(),
                     "loss": loss_val_min,
