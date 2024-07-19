@@ -177,7 +177,7 @@ def run_training(
     # Plots
     # --------------------------------------------------------------#    
 
-    fig, ax = plt.subplots(nrows=1, ncols=2)
+    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(8, 4))
 
     x_plot = list(range(len(train_losses)))
     ax[0].set_xlabel("Epochs")
