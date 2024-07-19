@@ -119,7 +119,10 @@ class FNO2d(nn.Module):
         self.fc2 = nn.Linear(128, out_channels)
 
     def forward(self, x, grid):
-        # x dim = [b, x1, x2, t*v]
+
+        # x: [b, x1, x2, t*v]
+        # grid: [b, x1, x2, dims]
+
         x = torch.cat((x, grid), dim=-1)
         x = self.fc0(x)
         x = x.permute(0, 3, 1, 2)
@@ -152,4 +155,4 @@ class FNO2d(nn.Module):
         x = F.gelu(x)
         x = self.fc2(x)
 
-        return x
+        return x.unsqueeze(-2)
