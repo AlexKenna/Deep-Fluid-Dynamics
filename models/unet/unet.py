@@ -67,6 +67,9 @@ class UNet2d(nn.Module):
 
     def forward(self, x, grid):
 
+        # x: [b, x1, x2, t*v]
+        # grid: [b, x1, x2, dims]
+
         x = torch.cat((x, grid), dim=-1).permute(0, 3, 1, 2)
         enc1 = self.encoder1(x)
         enc2 = self.encoder2(self.pool1(enc1))
@@ -87,7 +90,9 @@ class UNet2d(nn.Module):
         dec1 = self.upconv1(dec2)
         dec1 = torch.cat((dec1, enc1), dim=1)
         dec1 = self.decoder1(dec1)
-        return self.conv(dec1)
+        dec1 = self.conv(dec1)
+        dec1 = dec1.permute(0, 2, 3, 1)
+        return dec1.unsqueeze(-2)
 
     @staticmethod
     def _block(in_channels, features, name):
