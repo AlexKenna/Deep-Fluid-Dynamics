@@ -48,6 +48,9 @@ def run_training(
     model_name = "FNO_" + data_file
     model_path = base_model_path + model_name + ".pt"
 
+    total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(f"Total parameters = {total_params}")
+
     optimiser = optim.Adam(model.parameters(), lr=learning_rate)
     scheduler = torch.optim.lr_scheduler.StepLR(
         optimiser, step_size=scheduler_step, gamma=scheduler_gamma
@@ -158,7 +161,7 @@ def run_training(
         train_time += stop_time - start_time
         train_losses.append(total_train_loss / train_iters)
         val_losses.append(total_val_loss / val_iters)
-        print(f"Epoch: {epoch}, time: {stop_time - start_time:.5f}, train loss: {train_losses[-1]:.6f}, val loss: {val_losses[-1]:.6f}")
+        print(f"Epoch: {epoch}, time: {stop_time - start_time:.2f}, train loss: {train_losses[-1]:.8f}, val loss: {val_losses[-1]:.8f}")
 
         # Store model
 
