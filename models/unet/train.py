@@ -197,8 +197,8 @@ def run_training(
 
     ax[1].set_xlabel("Epochs")
     ax[1].set_ylabel("MSE Loss")
-    ax[1].plot(x_plot[2:], train_losses[2:], color="#636EFA")
-    ax[1].plot(x_plot[2:], val_losses[2:], color="#EF553B")
+    ax[1].plot(x_plot[25:], train_losses[25:], color="#636EFA")
+    ax[1].plot(x_plot[25:], val_losses[25:], color="#EF553B")
     ax[1].legend(["Training Loss", "Validation Loss"])
     ax[1].grid()
 
