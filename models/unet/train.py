@@ -44,7 +44,7 @@ def run_training(
     # Model
     # --------------------------------------------------------------#
 
-    model = UNet2d(in_channels=2, out_channels=2).to(device)
+    model = nn.DataParallel(UNet2d(in_channels=2, out_channels=2)).to(device)
     model_name = "UNet_" + data_file
     model_path = base_model_path + model_name + ".pt"
 

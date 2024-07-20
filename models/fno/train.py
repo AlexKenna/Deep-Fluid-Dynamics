@@ -44,7 +44,7 @@ def run_training(
     # Model
     # --------------------------------------------------------------#
 
-    model = FNO2d(in_channels=2, out_channels=2).to(device)
+    model = nn.DataParallel(FNO2d(in_channels=2, out_channels=2)).to(device)
     model_name = "FNO_" + data_file
     model_path = base_model_path + model_name + ".pt"
 
