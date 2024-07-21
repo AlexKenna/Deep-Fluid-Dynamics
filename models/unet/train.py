@@ -44,7 +44,7 @@ def run_training(
     # Model
     # --------------------------------------------------------------#
 
-    model = nn.DataParallel(UNet2d(in_channels=2, out_channels=2)).to(device)
+    model = UNet2d(in_channels=2, out_channels=2)
     model_name = "UNet_" + data_file
     model_path = base_model_path + model_name + ".pt"
 
@@ -83,6 +83,8 @@ def run_training(
         loss_val_min = checkpoint["loss"]
         train_losses = checkpoint["training_losses"]
         val_losses = checkpoint["validation_losses"]
+
+    model = nn.DataParallel(model).to(device)
 
 
     # --------------------------------------------------------------#
