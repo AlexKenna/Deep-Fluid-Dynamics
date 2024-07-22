@@ -40,6 +40,7 @@ def run_training(
     train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_data, batch_size=batch_size, shuffle=False)
 
+
     # --------------------------------------------------------------#
     # Model
     # --------------------------------------------------------------#
@@ -68,7 +69,6 @@ def run_training(
         print("Restoring model from file...")
         checkpoint = torch.load(model_path, map_location=device)
         model.load_state_dict(checkpoint["model_state_dict"])
-        model.to(device)
         model.train()
 
         # Load optimizer state dict
@@ -124,9 +124,10 @@ def run_training(
                 loss = loss_fn(y_pred, y)
                 optimiser.zero_grad()
                 loss.backward()
-                total_train_loss += loss.item()
+                total_train_loss += loss.item() * data.shape[0]
                 optimiser.step()
 
+        total_train_loss /= len(train_loader.dataset)
         scheduler.step()
 
         # Validation
@@ -155,7 +156,9 @@ def run_training(
                         y_pred = model(x, grid)
 
                         loss = loss_fn(y_pred, y)
-                        total_val_loss += loss.item()
+                        total_val_loss += loss.item() * data.shape[0]
+
+                total_val_loss /= len(val_loader.dataset)
 
         # Logging
 

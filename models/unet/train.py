@@ -68,7 +68,6 @@ def run_training(
         print("Restoring model from file...")
         checkpoint = torch.load(model_path, map_location=device)
         model.load_state_dict(checkpoint["model_state_dict"])
-        model.to(device)
         model.train()
 
         # Load optimizer state dict
