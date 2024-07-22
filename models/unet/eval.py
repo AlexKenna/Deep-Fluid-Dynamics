@@ -87,6 +87,8 @@ def run_evaluation(
     # Plot Test Errors
     # --------------------------------------------------------------#
 
+    print(f"Mean MSE: {test_errors.mean()}")
+
     _, ax = plt.subplots(nrows=1, ncols=1, figsize=(4,4))
 
     ax.set_xlabel("Time step")
